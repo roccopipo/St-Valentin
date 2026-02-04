@@ -42,6 +42,7 @@
             text-align: center;
             z-index: 10;
             padding: 2rem;
+            position: relative;
         }
 
         h1 {
@@ -164,19 +165,16 @@
             }
         }
 
-        .warning-message {
+        /* Messages qui s'accumulent en arrière-plan */
+        .lorine-message {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 20, 147, 0.9);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 999px;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            z-index: 1200;
-            animation: fade-in 0.5s forwards;
+            color: rgba(199, 21, 133, 0.18);
+            font-size: 2.2rem;
+            font-weight: 700;
+            pointer-events: none;
+            z-index: 1;
+            white-space: nowrap;
+            transform: rotate(-15deg);
         }
     </style>
 </head>
@@ -194,16 +192,24 @@
 
         function handleNo(event) {
             noClickCount++;
-            
-            if (noClickCount === 5) {
-                const existing = document.querySelector('.warning-message');
-                if (!existing) {
-                    const warning = document.createElement('div');
-                    warning.className = 'warning-message';
-                    warning.textContent = 'Lorine il faut appuyer sur oui';
-                    document.body.appendChild(warning);
-                    setTimeout(() => warning.remove(), 4000);
-                }
+
+            // Tous les 5 clics (5,10,15,...) on ajoute un nouveau message
+            if (noClickCount % 5 === 0) { // [web:31][web:41]
+                const msg = document.createElement('div');
+                msg.className = 'lorine-message';
+                msg.textContent = 'Lorine il faut appuyer sur oui';
+
+                // Position aléatoire dans la fenêtre
+                const x = Math.random() * (window.innerWidth - 300);
+                const y = Math.random() * (window.innerHeight - 100);
+                msg.style.left = x + 'px';
+                msg.style.top = y + 'px';
+
+                // Petite rotation aléatoire
+                const angle = (Math.random() * 30) - 15;
+                msg.style.transform = `rotate(${angle}deg)`;
+
+                document.body.appendChild(msg);
             }
 
             const btn = event.target;
