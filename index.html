@@ -163,6 +163,21 @@
                 opacity: 1;
             }
         }
+
+        .warning-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 20, 147, 0.9);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 999px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1200;
+            animation: fade-in 0.5s forwards;
+        }
     </style>
 </head>
 <body>
@@ -175,7 +190,22 @@
     </div>
 
     <script>
+        let noClickCount = 0;
+
         function handleNo(event) {
+            noClickCount++;
+            
+            if (noClickCount === 5) {
+                const existing = document.querySelector('.warning-message');
+                if (!existing) {
+                    const warning = document.createElement('div');
+                    warning.className = 'warning-message';
+                    warning.textContent = 'Lorine il faut appuyer sur oui';
+                    document.body.appendChild(warning);
+                    setTimeout(() => warning.remove(), 4000);
+                }
+            }
+
             const btn = event.target;
             const maxX = window.innerWidth - btn.offsetWidth - 40;
             const maxY = window.innerHeight - btn.offsetHeight - 40;
